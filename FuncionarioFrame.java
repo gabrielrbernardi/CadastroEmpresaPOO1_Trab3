@@ -1,18 +1,13 @@
 package trab3POO;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.Timer;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -21,9 +16,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
+import javax.swing.JProgressBar;
 
 public class FuncionarioFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField nomeField;
 	private JTextField idadeField;
@@ -31,6 +28,7 @@ public class FuncionarioFrame extends JFrame {
 	private JButton btnEnviar;
 	private JLabel lblStatusGravacao;
 	private JButton btnVoltar;
+	private JProgressBar pBar;
 
 	/**
 	 * Create the frame.
@@ -44,9 +42,9 @@ public class FuncionarioFrame extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{95, 321, 0};
-		gbl_contentPane.rowHeights = new int[]{21, 21, 21, 0, 0, 0};
+		gbl_contentPane.rowHeights = new int[]{21, 21, 21, 0, 0, 0, 0, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
 		JLabel lblNome = new JLabel("Nome:");
@@ -129,17 +127,26 @@ public class FuncionarioFrame extends JFrame {
 		gbc_btnEnviar.gridy = 3;
 		contentPane.add(btnEnviar, gbc_btnEnviar);
 		
+		pBar = new JProgressBar();
+		GridBagConstraints gbc_pBar = new GridBagConstraints();
+		gbc_pBar.fill = GridBagConstraints.BOTH;
+		gbc_pBar.insets = new Insets(0, 0, 5, 0);
+		gbc_pBar.gridx = 1;
+		gbc_pBar.gridy = 4;
+		contentPane.add(pBar, gbc_pBar);
+		
 		lblStatusGravacao = new JLabel("");
 		GridBagConstraints gbc_lblStatusGravacao = new GridBagConstraints();
+		gbc_lblStatusGravacao.insets = new Insets(0, 0, 5, 0);
 		gbc_lblStatusGravacao.gridx = 1;
-		gbc_lblStatusGravacao.gridy = 4;
+		gbc_lblStatusGravacao.gridy = 5;
 		contentPane.add(lblStatusGravacao, gbc_lblStatusGravacao);
 	}
 	public void enterTrigger(JTextField val) {
 		val.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == e.VK_ENTER) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					cadastrarFuncionario();
 				}
 			}
@@ -160,11 +167,31 @@ public class FuncionarioFrame extends JFrame {
 			func.setNome(nome);
 			func.setIdade(Integer.parseInt(idade));
 			func.setValSalario(Float.parseFloat(salario));
-			lblStatusGravacao.setText("Dados gravados com sucesso");
+			progressBar();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 		}
+	}
+	Timer timer;
+	private void progressBar() {
+		ActionListener listener = new ActionListener() {
+			int value = 0;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				value++;
+				pBar.setValue(value);
+				btnEnviar.setEnabled(false);
+				if(value >= 100) {
+					btnEnviar.setEnabled(true);
+					lblStatusGravacao.setText("Dados gravados com sucesso");
+					timer.stop();
+					return;
+				}
+			}
+		};
+		timer = new Timer(10, listener);
+		timer.start();
 	}
 
 }

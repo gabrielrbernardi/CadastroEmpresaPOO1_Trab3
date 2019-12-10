@@ -1,11 +1,6 @@
 package trab3POO;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.JTextComponent;
-
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -17,11 +12,14 @@ import javax.swing.*;
 
 public class FornecedorFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField nomeField;
 	private JTextField idadeField;
 	private JTextField avaliacaoField;
 	private JLabel lblStatusGravacao;
+	private JProgressBar pBar;
+	private JButton btnEnviar;
 
 	/**
 	 * Create the frame.
@@ -36,9 +34,9 @@ public class FornecedorFrame extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{120, 307, 0};
-		gbl_contentPane.rowHeights = new int[]{21, 21, 21, 27, 0, 0};
+		gbl_contentPane.rowHeights = new int[]{21, 21, 21, 27, 0, 0, 0, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
 		JLabel lblNome = new JLabel("Nome:");
@@ -108,7 +106,7 @@ public class FornecedorFrame extends JFrame {
 		gbc_btnVoltar.gridy = 3;
 		contentPane.add(btnVoltar, gbc_btnVoltar);
 		
-		JButton btnEnviar = new JButton("Enviar");
+		btnEnviar = new JButton("Enviar");
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 //				qualidadeField.getSelectedItem();
@@ -120,11 +118,20 @@ public class FornecedorFrame extends JFrame {
 		gbc_btnEnviar.gridx = 1;
 		gbc_btnEnviar.gridy = 3;
 		contentPane.add(btnEnviar, gbc_btnEnviar);
+				
+		pBar = new JProgressBar();
+		GridBagConstraints gbc_pBar = new GridBagConstraints();
+		gbc_pBar.fill = GridBagConstraints.BOTH;
+		gbc_pBar.insets = new Insets(0, 0, 5, 0);
+		gbc_pBar.gridx = 1;
+		gbc_pBar.gridy = 4;
+		contentPane.add(pBar, gbc_pBar);
 		
 		lblStatusGravacao = new JLabel("");
 		GridBagConstraints gbc_lblStatusGravacao = new GridBagConstraints();
+		gbc_lblStatusGravacao.insets = new Insets(0, 0, 5, 0);
 		gbc_lblStatusGravacao.gridx = 1;
-		gbc_lblStatusGravacao.gridy = 4;
+		gbc_lblStatusGravacao.gridy = 5;
 		contentPane.add(lblStatusGravacao, gbc_lblStatusGravacao);
 	}
 	
@@ -132,7 +139,7 @@ public class FornecedorFrame extends JFrame {
 		val.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == e.VK_ENTER) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					cadastrarFornecedor();
 				}
 			}
@@ -154,11 +161,31 @@ public class FornecedorFrame extends JFrame {
 			func.setNome(nome);
 			func.setIdade(Integer.parseInt(idade));
 			func.setValSalario(Integer.parseInt(avaliacao));
-			lblStatusGravacao.setText("Dados gravados com sucesso");
+			progressBar();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 		}
+	}
+	Timer timer;
+	private void progressBar() {
+		ActionListener listener = new ActionListener() {
+			int value = 0;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				value++;
+				pBar.setValue(value);
+				btnEnviar.setEnabled(false);
+				if(value >= 100) {
+					btnEnviar.setEnabled(true);
+					lblStatusGravacao.setText("Dados gravados com sucesso");
+					timer.stop();
+					return;
+				}
+			}
+		};
+		timer = new Timer(10, listener);
+		timer.start();
 	}
 
 }

@@ -17,15 +17,16 @@ import java.awt.event.KeyEvent;
 
 public class ClienteFrame extends JFrame {
 
-	protected static final boolean KeyEvent = false;
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField nomeField;
 	private JTextField idadeField;
 	private JTextField avaliacaoField;
 	private JTextField comprarField;
-	private JButton btnNewButton;
+	private JButton btnEnviar;
 	private JButton btnVoltar;
 	private JLabel lblStatusGravacao;
+	private JProgressBar pBar;
 
 	/**
 	 * Create the frame.
@@ -40,9 +41,9 @@ public class ClienteFrame extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{134, 282, 0};
-		gbl_contentPane.rowHeights = new int[]{21, 21, 21, 21, 27, 0, 0};
+		gbl_contentPane.rowHeights = new int[]{21, 21, 21, 21, 27, 0, 0, 0, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
 		JLabel lblNome = new JLabel("Nome:");
@@ -121,8 +122,8 @@ public class ClienteFrame extends JFrame {
 		contentPane.add(comprarField, gbc_comprarField);
 		comprarField.setColumns(10);
 		
-		btnNewButton = new JButton("Enviar");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnEnviar = new JButton("Enviar");
+		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				cadastrarCliente();
 			}
@@ -141,17 +142,26 @@ public class ClienteFrame extends JFrame {
 		gbc_btnVoltar.gridx = 0;
 		gbc_btnVoltar.gridy = 4;
 		contentPane.add(btnVoltar, gbc_btnVoltar);
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton.anchor = GridBagConstraints.NORTH;
-		gbc_btnNewButton.gridx = 1;
-		gbc_btnNewButton.gridy = 4;
-		contentPane.add(btnNewButton, gbc_btnNewButton);	
+		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
+		gbc_btnEnviar.insets = new Insets(0, 0, 5, 0);
+		gbc_btnEnviar.anchor = GridBagConstraints.NORTH;
+		gbc_btnEnviar.gridx = 1;
+		gbc_btnEnviar.gridy = 4;
+		contentPane.add(btnEnviar, gbc_btnEnviar);	
+		
+		pBar = new JProgressBar();
+		GridBagConstraints gbc_pBar = new GridBagConstraints();
+		gbc_pBar.insets = new Insets(0, 0, 5, 0);
+		gbc_pBar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_pBar.gridx = 1;
+		gbc_pBar.gridy = 5;
+		contentPane.add(pBar, gbc_pBar);
 		
 		lblStatusGravacao = new JLabel("");
 		GridBagConstraints gbc_lblStatusGravacao = new GridBagConstraints();
+		gbc_lblStatusGravacao.insets = new Insets(0, 0, 5, 0);
 		gbc_lblStatusGravacao.gridx = 1;
-		gbc_lblStatusGravacao.gridy = 5;
+		gbc_lblStatusGravacao.gridy = 6;
 		contentPane.add(lblStatusGravacao, gbc_lblStatusGravacao);
 	}
 	
@@ -159,7 +169,7 @@ public class ClienteFrame extends JFrame {
 		val.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == e.VK_ENTER) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					cadastrarCliente();
 				}
 			}
@@ -186,12 +196,32 @@ public class ClienteFrame extends JFrame {
 			cliente.setIdade(Integer.parseInt(idade));
 			cliente.setAvaliacaoCliente(Integer.parseInt(avaliacao));
 			cliente.comprar(Float.parseFloat(comprar));
-			lblStatusGravacao.setText("Dados gravados com sucesso");
+			progressBar();
 		} catch (Exception e) {
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
-		}
-		
+			return;
+		}	
+	}
+	Timer timer;
+	private void progressBar() {
+		ActionListener listener = new ActionListener() {
+			int value = 0;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				value++;
+				pBar.setValue(value);
+				btnEnviar.setEnabled(false);
+				if(value >= 100) {
+					btnEnviar.setEnabled(true);
+					lblStatusGravacao.setText("Dados gravados com sucesso");
+					timer.stop();
+					return;
+				}
+			}
+		};
+		timer = new Timer(10, listener);
+		timer.start();
 	}
 
 }
