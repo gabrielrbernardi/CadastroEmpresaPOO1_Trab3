@@ -4,10 +4,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.Timer;
-
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -29,12 +31,39 @@ public class FuncionarioFrame extends JFrame {
 	private JLabel lblStatusGravacao;
 	private JButton btnVoltar;
 	private JProgressBar pBar;
+	private JMenuBar menuBar;
+	private JMenu mnHelp;
+	private JMenuItem mntmAbout;
+	private JMenuItem mntmHelp;
 
 	/**
 	 * Create the frame.
 	 */
 	public FuncionarioFrame() {
 		setTitle("Cadastro de Funcionario");
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		mnHelp = new JMenu("Options");
+		menuBar.add(mnHelp);
+		
+		mntmAbout = new JMenuItem("About");
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				about();
+			}
+		});
+		mnHelp.add(mntmAbout);
+		
+		mntmHelp = new JMenuItem("Help");
+		mntmHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				help();
+			}
+		});
+		mnHelp.add(mntmHelp);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -56,6 +85,7 @@ public class FuncionarioFrame extends JFrame {
 		contentPane.add(lblNome, gbc_lblNome);
 		
 		nomeField = new JTextField();
+		enterTrigger(nomeField);
 		GridBagConstraints gbc_nomeField = new GridBagConstraints();
 		gbc_nomeField.anchor = GridBagConstraints.NORTH;
 		gbc_nomeField.fill = GridBagConstraints.HORIZONTAL;
@@ -74,6 +104,7 @@ public class FuncionarioFrame extends JFrame {
 		contentPane.add(lblIdade, gbc_lblIdade);
 		
 		idadeField = new JTextField();
+		enterTrigger(idadeField);
 		GridBagConstraints gbc_idadeField = new GridBagConstraints();
 		gbc_idadeField.anchor = GridBagConstraints.NORTH;
 		gbc_idadeField.fill = GridBagConstraints.HORIZONTAL;
@@ -92,6 +123,7 @@ public class FuncionarioFrame extends JFrame {
 		contentPane.add(lblVa, gbc_lblVa);
 		
 		salarioField = new JTextField();
+		enterTrigger(salarioField);
 		GridBagConstraints gbc_salarioField = new GridBagConstraints();
 		gbc_salarioField.insets = new Insets(0, 0, 5, 0);
 		gbc_salarioField.anchor = GridBagConstraints.NORTH;
@@ -104,7 +136,11 @@ public class FuncionarioFrame extends JFrame {
 		btnEnviar = new JButton("Enviar");
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cadastrarFuncionario();
+				try {
+					cadastrarFuncionario();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -128,6 +164,7 @@ public class FuncionarioFrame extends JFrame {
 		contentPane.add(btnEnviar, gbc_btnEnviar);
 		
 		pBar = new JProgressBar();
+		pBar.setStringPainted(true);
 		GridBagConstraints gbc_pBar = new GridBagConstraints();
 		gbc_pBar.fill = GridBagConstraints.BOTH;
 		gbc_pBar.insets = new Insets(0, 0, 5, 0);
@@ -147,12 +184,16 @@ public class FuncionarioFrame extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					cadastrarFuncionario();
+					try {
+						cadastrarFuncionario();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
 	}
-	public void cadastrarFuncionario() {
+	public void cadastrarFuncionario() throws Exception{
 		Funcionario func = new Funcionario();
 		String nome, idade, salario;
 		nome = nomeField.getText();
@@ -164,10 +205,13 @@ public class FuncionarioFrame extends JFrame {
 			return;
 		}
 		try {
+			salario = salario.replace(",", ".");								//Fazendo o tratamento para valores de salario digitados com virgula, para que o programa consiga processar esses dados
 			func.setNome(nome);
 			func.setIdade(Integer.parseInt(idade));
 			func.setValSalario(Float.parseFloat(salario));
 			progressBar();
+			Pessoa.cadastro.add(func);
+			Pessoa.armazenaBuffer();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
@@ -182,8 +226,14 @@ public class FuncionarioFrame extends JFrame {
 				value++;
 				pBar.setValue(value);
 				btnEnviar.setEnabled(false);
+				nomeField.setEditable(false);
+				idadeField.setEnabled(false);
+				salarioField.setEnabled(false);
 				if(value >= 100) {
 					btnEnviar.setEnabled(true);
+					nomeField.setEditable(true);
+					idadeField.setEnabled(true);
+					salarioField.setEnabled(true);
 					lblStatusGravacao.setText("Dados gravados com sucesso");
 					timer.stop();
 					return;
@@ -192,6 +242,20 @@ public class FuncionarioFrame extends JFrame {
 		};
 		timer = new Timer(10, listener);
 		timer.start();
+	}
+	
+	public void about() {
+		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
+											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Versao: 1.0.1",
+											"About", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void help() {
+		JOptionPane.showMessageDialog(null, "Para que o cadastro seja efetuado, digite o NOME do Cliente" + "\n" +
+											"Para IDADE, digite apenas valores inteiros" + "\n" +
+											"Para VALOR DO SALARIO digite qualquer valores reais",
+											"FUNCIONARIO Help", JOptionPane.QUESTION_MESSAGE);
 	}
 
 }

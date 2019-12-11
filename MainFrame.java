@@ -1,26 +1,26 @@
 package trab3POO;
 
-
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
-import javax.swing.JOptionPane;
-import javax.swing.ButtonGroup;
+
 import javax.swing.*;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-
+	private JRadioButton rdbtnCliente;
+	private JRadioButton rdbtnFuncionario;
+	private JRadioButton rdbtnFornecedor;
+	private JLabel lblStatusGravacao;
 	/**
 	 * Create the frame.
 	 */
@@ -54,53 +54,127 @@ public class MainFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new MigLayout("", "[grow][grow][][]", "[::20px,grow][][][][][]"));
+		GridBagLayout gbl_contentPane = new GridBagLayout();
+		gbl_contentPane.columnWidths = new int[]{63, 0, 68, 96, 92, 0};
+		gbl_contentPane.rowHeights = new int[]{17, 25, 27, 0, 0, 0, 0, 0, 0};
+		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		contentPane.setLayout(gbl_contentPane);
 		
 		JLabel lblPessoa = new JLabel("Selecione o tipo de cadastro:");
-		contentPane.add(lblPessoa, "cell 1 0");
+		GridBagConstraints gbc_lblPessoa = new GridBagConstraints();
+		gbc_lblPessoa.anchor = GridBagConstraints.NORTH;
+		gbc_lblPessoa.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPessoa.gridwidth = 2;
+		gbc_lblPessoa.gridx = 1;
+		gbc_lblPessoa.gridy = 0;
+		contentPane.add(lblPessoa, gbc_lblPessoa);
 		
-		JRadioButton rdbtnCliente = new JRadioButton("Cliente");
+		rdbtnCliente = new JRadioButton("Cliente");
+		enterTrigger(rdbtnCliente);
 		buttonGroup.add(rdbtnCliente);
-		contentPane.add(rdbtnCliente, "flowx,cell 1 1");
+		GridBagConstraints gbc_rdbtnCliente = new GridBagConstraints();
+		gbc_rdbtnCliente.anchor = GridBagConstraints.NORTHWEST;
+		gbc_rdbtnCliente.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnCliente.gridx = 1;
+		gbc_rdbtnCliente.gridy = 1;
+		contentPane.add(rdbtnCliente, gbc_rdbtnCliente);
 		
-		JRadioButton rdbtnFuncionario = new JRadioButton("Funcionário");
+		rdbtnFuncionario = new JRadioButton("Funcionário");
+		enterTrigger(rdbtnFuncionario);
 		buttonGroup.add(rdbtnFuncionario);
-		contentPane.add(rdbtnFuncionario, "cell 1 1");
+		GridBagConstraints gbc_rdbtnFuncionario = new GridBagConstraints();
+		gbc_rdbtnFuncionario.anchor = GridBagConstraints.NORTHWEST;
+		gbc_rdbtnFuncionario.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnFuncionario.gridx = 2;
+		gbc_rdbtnFuncionario.gridy = 1;
+		contentPane.add(rdbtnFuncionario, gbc_rdbtnFuncionario);
 		
-		JRadioButton rdbtnFornecedor = new JRadioButton("Fornecedor");
+		rdbtnFornecedor = new JRadioButton("Fornecedor");
+		enterTrigger(rdbtnFornecedor);
 		buttonGroup.add(rdbtnFornecedor);
-		contentPane.add(rdbtnFornecedor, "cell 1 1");
+		GridBagConstraints gbc_rdbtnFornecedor = new GridBagConstraints();
+		gbc_rdbtnFornecedor.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnFornecedor.anchor = GridBagConstraints.NORTHWEST;
+		gbc_rdbtnFornecedor.gridx = 3;
+		gbc_rdbtnFornecedor.gridy = 1;
+		contentPane.add(rdbtnFornecedor, gbc_rdbtnFornecedor);
 		
 		JButton btnSubmit = new JButton("Enviar");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(rdbtnCliente.isSelected()) {
-//					JOptionPane.showMessageDialog(null, "Foi selecionado: Cliente");
-					setVisible(false);
-//					LoginFrame LF = new LoginFrame();
-//					LF.setVisible(true);
-					ClienteFrame CF = new ClienteFrame();
-					CF.setVisible(true);
-				}else if(rdbtnFuncionario.isSelected()) {
-//					JOptionPane.showMessageDialog(null, "Foi selecionado: Funcionario");
-					setVisible(false);
-					FuncionarioFrame FF = new FuncionarioFrame();
-					FF.setVisible(true);
-				}else if(rdbtnFornecedor.isSelected()) {
-					setVisible(false);
-					FornecedorFrame FF = new FornecedorFrame();
-					FF.setVisible(true);
-//					JOptionPane.showMessageDialog(null, "Foi selecionado: Fornecedor");
-				}else {
-					JOptionPane.showMessageDialog(null, "Selecione o tipo de cadastro!", "Main Error",JOptionPane.ERROR_MESSAGE);
+			submitForm();
+			}
+		});
+		GridBagConstraints gbc_btnSubmit = new GridBagConstraints();
+		gbc_btnSubmit.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSubmit.anchor = GridBagConstraints.NORTH;
+		gbc_btnSubmit.gridx = 2;
+		gbc_btnSubmit.gridy = 2;
+		contentPane.add(btnSubmit, gbc_btnSubmit);
+		
+		JButton btnImprimir = new JButton("Imprimir");
+		btnImprimir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Pessoa.closeBuffer();
+				} catch (Exception e) {
+					lblStatusGravacao.setText("Deu errado");
+					e.printStackTrace();
 				}
 			}
 		});
-		contentPane.add(btnSubmit, "cell 1 2,alignx center");
+		GridBagConstraints gbc_btnImprimir = new GridBagConstraints();
+		gbc_btnImprimir.insets = new Insets(0, 0, 5, 5);
+		gbc_btnImprimir.gridx = 2;
+		gbc_btnImprimir.gridy = 3;
+		contentPane.add(btnImprimir, gbc_btnImprimir);
+		
+		lblStatusGravacao = new JLabel("");
+		GridBagConstraints gbc_lblStatusGravacao = new GridBagConstraints();
+		gbc_lblStatusGravacao.insets = new Insets(0, 0, 5, 5);
+		gbc_lblStatusGravacao.gridx = 1;
+		gbc_lblStatusGravacao.gridy = 4;
+		contentPane.add(lblStatusGravacao, gbc_lblStatusGravacao);
 	}
+	
+	public void enterTrigger(JRadioButton val) {
+		val.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					submitForm();
+				}
+			}
+		});
+	}
+	
+	public void submitForm() {
+		if(rdbtnCliente.isSelected()) {
+//			JOptionPane.showMessageDialog(null, "Foi selecionado: Cliente");
+			setVisible(false);
+//			LoginFrame LF = new LoginFrame();
+//			LF.setVisible(true);
+			ClienteFrame CF = new ClienteFrame();
+			CF.setVisible(true);
+		}else if(rdbtnFuncionario.isSelected()) {
+//			JOptionPane.showMessageDialog(null, "Foi selecionado: Funcionario");
+			setVisible(false);
+			FuncionarioFrame FF = new FuncionarioFrame();
+			FF.setVisible(true);
+		}else if(rdbtnFornecedor.isSelected()) {
+			setVisible(false);
+			FornecedorFrame FF = new FornecedorFrame();
+			FF.setVisible(true);
+//			JOptionPane.showMessageDialog(null, "Foi selecionado: Fornecedor");
+		}else {
+			JOptionPane.showMessageDialog(null, "Selecione o tipo de cadastro!", "Main Error",JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	public void about() {
 		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
-											"Termino do desenvolvimento: 07/12/2019" + "\n" +
+											"Termino do desenvolvimento: 10/12/2019" + "\n" +
 											"Versao: 1.0.1",
 											"About", JOptionPane.INFORMATION_MESSAGE);
 	}

@@ -1,18 +1,18 @@
 package trab3POO;
 public class Funcionario extends Pessoa{
-	private float valSalario;
+	private static float valSalario;
 
-	public Funcionario() {
+	public Funcionario() throws Exception{
 	}
 	
-	public float getValSalario() {
+	public static float getValSalario() {
 		return valSalario;
 	}
 	public void setValSalario(float valSalario) {
-		this.valSalario = valSalario;
+		Funcionario.valSalario = valSalario;
 	}
 	
 	void aumentoSalario(float valAumento) {
-		this.setValSalario(this.getValSalario() * valAumento); 						//aumento de 10%
+		this.setValSalario(Funcionario.getValSalario() * valAumento); 						//aumento de 10%
 	}
 }

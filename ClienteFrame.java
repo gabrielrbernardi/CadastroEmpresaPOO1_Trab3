@@ -1,11 +1,7 @@
 package trab3POO;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
@@ -15,7 +11,7 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class ClienteFrame extends JFrame {
+public class ClienteFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -27,13 +23,39 @@ public class ClienteFrame extends JFrame {
 	private JButton btnVoltar;
 	private JLabel lblStatusGravacao;
 	private JProgressBar pBar;
-
+	private JMenuBar menuBar;
+	private JMenu mnHelp;
+	private JMenuItem mntmAbout;
+	private JMenuItem mntmHelp;
+	
 	/**
 	 * Create the frame.
 	 */
 	public ClienteFrame() {
 		setTitle("Cadastro de Cliente");
 
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		mnHelp = new JMenu("Options");
+		menuBar.add(mnHelp);
+		
+		mntmAbout = new JMenuItem("About");
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				about();
+			}
+		});
+		mnHelp.add(mntmAbout);
+		
+		mntmHelp = new JMenuItem("Help");
+		mntmHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				help();
+			}
+		});
+		mnHelp.add(mntmHelp);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -125,7 +147,12 @@ public class ClienteFrame extends JFrame {
 		btnEnviar = new JButton("Enviar");
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cadastrarCliente();
+				try {
+					cadastrarCliente();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -150,6 +177,7 @@ public class ClienteFrame extends JFrame {
 		contentPane.add(btnEnviar, gbc_btnEnviar);	
 		
 		pBar = new JProgressBar();
+		pBar.setStringPainted(true);
 		GridBagConstraints gbc_pBar = new GridBagConstraints();
 		gbc_pBar.insets = new Insets(0, 0, 5, 0);
 		gbc_pBar.fill = GridBagConstraints.HORIZONTAL;
@@ -170,18 +198,20 @@ public class ClienteFrame extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					cadastrarCliente();
+					try {
+						cadastrarCliente();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
 	}
 	
-	public void cadastrarCliente() {
+	public void cadastrarCliente() throws Exception {
 		Cliente cliente = new Cliente();
-		String nome;
-		String idade;
-		String avaliacao;
-		String comprar;
+		String nome, idade, avaliacao, comprar;
 		nome = nomeField.getText();
 		idade = idadeField.getText();
 		avaliacao = avaliacaoField.getText();
@@ -192,11 +222,14 @@ public class ClienteFrame extends JFrame {
 			return;
 		}
 		try {
+			comprar = comprar.replace(",", ".");								//Fazendo o tratamento para valores reais digitados com virgula
 			cliente.setNome(nome);
 			cliente.setIdade(Integer.parseInt(idade));
 			cliente.setAvaliacaoCliente(Integer.parseInt(avaliacao));
 			cliente.comprar(Float.parseFloat(comprar));
 			progressBar();
+			Pessoa.cadastro.add(cliente);
+			Pessoa.armazenaBuffer();
 		} catch (Exception e) {
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
@@ -212,8 +245,16 @@ public class ClienteFrame extends JFrame {
 				value++;
 				pBar.setValue(value);
 				btnEnviar.setEnabled(false);
+				nomeField.setEditable(false);
+				idadeField.setEnabled(false);
+				avaliacaoField.setEnabled(false);
+				comprarField.setEnabled(false);
 				if(value >= 100) {
 					btnEnviar.setEnabled(true);
+					nomeField.setEditable(true);
+					idadeField.setEnabled(true);
+					avaliacaoField.setEnabled(true);
+					comprarField.setEnabled(true);
 					lblStatusGravacao.setText("Dados gravados com sucesso");
 					timer.stop();
 					return;
@@ -222,6 +263,20 @@ public class ClienteFrame extends JFrame {
 		};
 		timer = new Timer(10, listener);
 		timer.start();
+	}
+	
+	public void about() {
+		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
+											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Versao: 1.0.1",
+											"About", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void help() {
+		JOptionPane.showMessageDialog(null, "Para que o cadastro seja efetuado, digite o NOME do Cliente" + "\n" +
+											"Para IDADE e AVALIACAO, digite apenas valores inteiros" + "\n" +
+											"Para COMPRAR digite qualquer valor real",
+											"Cliente Help", JOptionPane.QUESTION_MESSAGE);
 	}
 
 }

@@ -17,6 +17,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 
 public class LoginFrame extends JFrame {
@@ -97,6 +99,7 @@ public class LoginFrame extends JFrame {
 		contentPane.add(lblUsuario, gbc_lblUsuario);
 		
 		usernameField = new JTextField();
+		enterTrigger(usernameField);
 		GridBagConstraints gbc_usernameField = new GridBagConstraints();
 		gbc_usernameField.gridwidth = 3;
 		gbc_usernameField.fill = GridBagConstraints.HORIZONTAL;
@@ -116,6 +119,7 @@ public class LoginFrame extends JFrame {
 		contentPane.add(lblSenha, gbc_lblSenha);
 		
 		passwordField = new JPasswordField();
+		enterTrigger(passwordField);
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
 		gbc_passwordField.gridwidth = 3;
 		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
@@ -134,19 +138,7 @@ public class LoginFrame extends JFrame {
 		
 				btnLogin.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						String usr = usernameField.getText();
-		//				@SuppressWarnings("deprecation")
-						String pwd = passwordField.getText();
-						String correctUsr = "admin";
-						String correctPwd = "admin";
-						if(usr.equals(correctUsr) && pwd.equals(correctPwd)) {
-							statusLogin.setText("Conectado");
-							setVisible(false);
-							MainFrame IF = new MainFrame();
-							IF.setVisible(true);
-						}else {
-							statusLogin.setText("Acesso negado");
-						}
+						login();
 					}
 				});
 		
@@ -178,9 +170,36 @@ public class LoginFrame extends JFrame {
 		gbc_statusLogin.gridy = 3;
 		contentPane.add(statusLogin, gbc_statusLogin);
 	}
+	
+	public void enterTrigger(JTextField val) {
+		val.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					login();
+				}
+			}
+		});
+	}
+	
+	public void login() {
+		String usr = usernameField.getText();
+		String pwd = new String(passwordField.getPassword());
+		String correctUsr = "admin";
+		String correctPwd = "admin";
+		if(usr.equals(correctUsr) && pwd.equals(correctPwd)) {
+			statusLogin.setText("Conectado");
+			setVisible(false);
+			MainFrame IF = new MainFrame();
+			IF.setVisible(true);
+		}else {
+			JOptionPane.showMessageDialog(null, "Usuario ou senha incorretos\nDigite novamente", "Error Login", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	public void about() {
 		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
-											"Termino do desenvolvimento: 07/12/2019" + "\n" +
+											"Termino do desenvolvimento: 10/12/2019" + "\n" +
 											"Versao: 1.0.1",
 											"About", JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -191,6 +210,4 @@ public class LoginFrame extends JFrame {
 											"Após isso, preencha os dados", 
 											"Help", JOptionPane.QUESTION_MESSAGE);
 	}
-
-
 }

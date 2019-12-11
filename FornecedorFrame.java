@@ -20,6 +20,10 @@ public class FornecedorFrame extends JFrame {
 	private JLabel lblStatusGravacao;
 	private JProgressBar pBar;
 	private JButton btnEnviar;
+	private JMenuBar menuBar;
+	private JMenu mnHelp;
+	private JMenuItem mntmAbout;
+	private JMenuItem mntmHelp;
 
 	/**
 	 * Create the frame.
@@ -27,6 +31,27 @@ public class FornecedorFrame extends JFrame {
 	public FornecedorFrame() {
 		setTitle("Cadastro de Fornecedor");
 		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		mnHelp = new JMenu("Options");
+		menuBar.add(mnHelp);
+		
+		mntmAbout = new JMenuItem("About");
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				about();
+			}
+		});
+		mnHelp.add(mntmAbout);
+		
+		mntmHelp = new JMenuItem("Help");
+		mntmHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				help();
+			}
+		});
+		mnHelp.add(mntmHelp);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -93,6 +118,7 @@ public class FornecedorFrame extends JFrame {
 		});
 		
 		avaliacaoField = new JTextField();
+		enterTrigger(avaliacaoField);
 		GridBagConstraints gbc_avaliacaoField = new GridBagConstraints();
 		gbc_avaliacaoField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_avaliacaoField.insets = new Insets(0, 0, 5, 0);
@@ -109,8 +135,11 @@ public class FornecedorFrame extends JFrame {
 		btnEnviar = new JButton("Enviar");
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				qualidadeField.getSelectedItem();
-				cadastrarFornecedor();
+				try {
+					cadastrarFornecedor();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
@@ -120,6 +149,7 @@ public class FornecedorFrame extends JFrame {
 		contentPane.add(btnEnviar, gbc_btnEnviar);
 				
 		pBar = new JProgressBar();
+		pBar.setStringPainted(true);
 		GridBagConstraints gbc_pBar = new GridBagConstraints();
 		gbc_pBar.fill = GridBagConstraints.BOTH;
 		gbc_pBar.insets = new Insets(0, 0, 5, 0);
@@ -133,6 +163,7 @@ public class FornecedorFrame extends JFrame {
 		gbc_lblStatusGravacao.gridx = 1;
 		gbc_lblStatusGravacao.gridy = 5;
 		contentPane.add(lblStatusGravacao, gbc_lblStatusGravacao);
+		
 	}
 	
 	public void enterTrigger(JTextField val) {
@@ -140,14 +171,18 @@ public class FornecedorFrame extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					cadastrarFornecedor();
+					try {
+						cadastrarFornecedor();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
 	}
 	
-	public void cadastrarFornecedor() {
-		Funcionario func = new Funcionario();
+	public void cadastrarFornecedor() throws Exception{		
+		Fornecedor forn = new Fornecedor();
 		String nome, idade, avaliacao;
 		nome = nomeField.getText();
 		idade = idadeField.getText();
@@ -158,10 +193,12 @@ public class FornecedorFrame extends JFrame {
 			return;
 		}
 		try {
-			func.setNome(nome);
-			func.setIdade(Integer.parseInt(idade));
-			func.setValSalario(Integer.parseInt(avaliacao));
+			forn.setNome(nome);
+			forn.setIdade(Integer.parseInt(idade));
+			forn.setIndiceQualidade(Integer.parseInt(avaliacao));
 			progressBar();
+			Pessoa.cadastro.add(forn);
+			Pessoa.armazenaBuffer();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
@@ -175,9 +212,16 @@ public class FornecedorFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				value++;
 				pBar.setValue(value);
+				nomeField.setEditable(false);
+				idadeField.setEnabled(false);
+				avaliacaoField.setEnabled(false);
 				btnEnviar.setEnabled(false);
+				
 				if(value >= 100) {
 					btnEnviar.setEnabled(true);
+					nomeField.setEditable(true);
+					idadeField.setEnabled(true);
+					avaliacaoField.setEnabled(true);
 					lblStatusGravacao.setText("Dados gravados com sucesso");
 					timer.stop();
 					return;
@@ -187,5 +231,17 @@ public class FornecedorFrame extends JFrame {
 		timer = new Timer(10, listener);
 		timer.start();
 	}
-
+	
+	public void about() {
+		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
+											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Versao: 1.0.1",
+											"About", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void help() {
+		JOptionPane.showMessageDialog(null, "Para que o cadastro seja efetuado, digite o NOME do Fornecedor" + "\n" +
+											"Para IDADE e INDICE DE QUALIDADE, digite apenas valores inteiros",
+											"Fornecedor Help", JOptionPane.QUESTION_MESSAGE);
+	}
 }

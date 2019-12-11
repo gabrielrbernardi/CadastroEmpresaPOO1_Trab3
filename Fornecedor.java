@@ -1,15 +1,15 @@
 package trab3POO;
 public class Fornecedor extends Pessoa{
-	private int indiceQualidade;
+	private static int indiceQualidade;
 
-	public Fornecedor() {
+	public Fornecedor() throws Exception{
 	}
 	
-	public int getIndiceQualidade() {
+	public static int getIndiceQualidade() {
 		return indiceQualidade;
 	}
 	public void setIndiceQualidade(int indiceQualidade) {
-		this.indiceQualidade = indiceQualidade;
+		Fornecedor.indiceQualidade = indiceQualidade;
 	}
 	
 }
