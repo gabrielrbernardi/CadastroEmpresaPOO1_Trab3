@@ -37,6 +37,22 @@ public class ClienteFrame extends JFrame{
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
+		mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		mntmImprimir = new JMenuItem("Imprimir");
+		mntmImprimir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Pessoa.closeBuffer();
+				} catch (Exception e) {
+					lblStatusGravacao.setText("Deu errado");
+					e.printStackTrace();
+				}
+			}
+		});
+		mnFile.add(mntmImprimir);
+		
 		mnHelp = new JMenu("Options");
 		menuBar.add(mnHelp);
 		
@@ -150,7 +166,6 @@ public class ClienteFrame extends JFrame{
 				try {
 					cadastrarCliente();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -201,7 +216,6 @@ public class ClienteFrame extends JFrame{
 					try {
 						cadastrarCliente();
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -237,6 +251,8 @@ public class ClienteFrame extends JFrame{
 		}	
 	}
 	Timer timer;
+	private JMenu mnFile;
+	private JMenuItem mntmImprimir;
 	private void progressBar() {
 		ActionListener listener = new ActionListener() {
 			int value = 0;

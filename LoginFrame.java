@@ -1,5 +1,6 @@
 package trab3POO;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -11,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -19,11 +21,13 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.awt.event.ActionEvent;
 
 public class LoginFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	protected static final Component OutFileFrame = null;
 	private JPanel contentPane;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
@@ -33,6 +37,8 @@ public class LoginFrame extends JFrame {
 	private JLabel lblUsuario;
 	private JLabel lblSenha;
 	private JButton btnTeste;
+	private File file;
+
 
 	/**
 	 * Launch the application.
@@ -145,9 +151,21 @@ public class LoginFrame extends JFrame {
 		btnTeste = new JButton("teste");
 		btnTeste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Escolha o arquivo de saida");
+//				File file1 = "/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/";
+				fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));
+				int returnVal = fc.showOpenDialog(OutFileFrame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					file = fc.getSelectedFile();
+					Pessoa.setNomeArquivoOut(file);
+				}else if(returnVal == JFileChooser.CANCEL_OPTION) {
+					JOptionPane.showMessageDialog(null, "Nao e possivel continuar sem escolher um arquivo de saída", "Fatal Error", JOptionPane.ERROR_MESSAGE);
+					System.exit(1);
+				}
 				MainFrame MF = new MainFrame();
 				MF.setVisible(true);
-				setVisible(false);
 			}
 		});
 		GridBagConstraints gbc_btnTeste = new GridBagConstraints();
@@ -206,6 +224,7 @@ public class LoginFrame extends JFrame {
 	
 	public void help() {
 		JOptionPane.showMessageDialog(null, "Primeiramente faca o login na plataforma" + "\n" + 
+											"Apos isso, selecione um arquivo para a saida/impressao dos dados" + "\n" +
 											"Depois selecione o tipo de cadastro que deseja fazer" + "\n" +
 											"Após isso, preencha os dados", 
 											"Help", JOptionPane.QUESTION_MESSAGE);

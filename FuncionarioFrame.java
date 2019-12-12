@@ -17,6 +17,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JProgressBar;
 
@@ -44,6 +46,23 @@ public class FuncionarioFrame extends JFrame {
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		JMenuItem mntmImprimir = new JMenuItem("Imprimir");
+		mntmImprimir.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					Pessoa.closeBuffer();
+				} catch (Exception e1) {
+					lblStatusGravacao.setText("Deu errado");
+					e1.printStackTrace();
+				}
+			}
+		});
+		mnFile.add(mntmImprimir);
 		
 		mnHelp = new JMenu("Options");
 		menuBar.add(mnHelp);

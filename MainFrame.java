@@ -9,18 +9,22 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 import java.awt.GridBagLayout;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.io.File;
 
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	protected static final Component OutFileFrame = null;
 	private JPanel contentPane;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton rdbtnCliente;
 	private JRadioButton rdbtnFuncionario;
 	private JRadioButton rdbtnFornecedor;
 	private JLabel lblStatusGravacao;
+	private File file;
 	/**
 	 * Create the frame.
 	 */
@@ -32,6 +36,31 @@ public class MainFrame extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		JMenuItem mntmOutpuFile = new JMenuItem("Output File");
+		mntmOutpuFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Escolha o arquivo de saida");
+//				File file1 = "/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/";
+				fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));
+				int returnVal = fc.showOpenDialog(OutFileFrame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					file = fc.getSelectedFile();
+					Pessoa.setNomeArquivoOut(file);
+					JOptionPane.showMessageDialog(null, "O arquivo de saida foi alterado", "", JOptionPane.INFORMATION_MESSAGE);
+				}else if(returnVal == JFileChooser.CANCEL_OPTION) {
+					JOptionPane.showMessageDialog(null, "O arquivo de saida nao foi alterado", "Warning", JOptionPane.WARNING_MESSAGE);
+				}
+//				setVisible(false);
+//				OutFileFrame OFF = new OutFileFrame();
+//				OFF.setVisible(true);
+			}
+		});
+		mnFile.add(mntmOutpuFile);
 		
 		JMenu mnHelp = new JMenu("Options");
 		menuBar.add(mnHelp);
@@ -180,7 +209,8 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void help() {
-		JOptionPane.showMessageDialog(null, "Primeiramente faca o login na plataforma" + "\n" + 
+		JOptionPane.showMessageDialog(null, "Primeiramente faca o login na plataforma" + "\n" +
+											"Apos isso, selecione um arquivo para a saida/impressao dos dados" + "\n" +
 											"Depois selecione o tipo de cadastro que deseja fazer" + "\n" +
 											"Após isso, preencha os dados", 
 											"Help", JOptionPane.QUESTION_MESSAGE);
