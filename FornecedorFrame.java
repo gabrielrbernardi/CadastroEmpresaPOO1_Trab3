@@ -212,12 +212,12 @@ public class FornecedorFrame extends JFrame {
 			return;
 		}
 		try {
-			forn.setNome(nome);
-			forn.setIdade(Integer.parseInt(idade));
+			Fornecedor.setNome(nome);
+			Fornecedor.setIdade(Integer.parseInt(idade));
 			forn.setIndiceQualidade(Integer.parseInt(avaliacao));
 			progressBar();
-			Pessoa.cadastro.add(forn);
-			Pessoa.armazenaBuffer();
+			Fornecedor.cadastro.add(forn);
+//			Fornecedor.armazenaBuffer();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");

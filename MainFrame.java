@@ -146,7 +146,7 @@ public class MainFrame extends JFrame {
 		btnImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					Pessoa.closeBuffer();
+					Pessoa.armazenaBuffer();
 				} catch (Exception e) {
 					lblStatusGravacao.setText("Deu errado");
 					e.printStackTrace();

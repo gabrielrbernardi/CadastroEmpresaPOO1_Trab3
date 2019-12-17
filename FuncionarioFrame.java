@@ -225,12 +225,12 @@ public class FuncionarioFrame extends JFrame {
 		}
 		try {
 			salario = salario.replace(",", ".");								//Fazendo o tratamento para valores de salario digitados com virgula, para que o programa consiga processar esses dados
-			func.setNome(nome);
-			func.setIdade(Integer.parseInt(idade));
+			Funcionario.setNome(nome);
+			Funcionario.setIdade(Integer.parseInt(idade));
 			func.setValSalario(Float.parseFloat(salario));
 			progressBar();
-			Pessoa.cadastro.add(func);
-			Pessoa.armazenaBuffer();
+			Funcionario.cadastro.add(func);
+//			Funcionario.armazenaBuffer();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");

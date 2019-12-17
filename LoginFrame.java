@@ -142,30 +142,20 @@ public class LoginFrame extends JFrame {
 		gbc_btnLogin.gridy = 2;
 		contentPane.add(btnLogin, gbc_btnLogin);
 		
-				btnLogin.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						login();
-					}
-				});
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				login();
+			}
+		});
 		
 		btnTeste = new JButton("teste");
 		btnTeste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
-				JFileChooser fc = new JFileChooser();
-				fc.setDialogTitle("Escolha o arquivo de saida");
-//				File file1 = "/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/";
-				fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));
-				int returnVal = fc.showOpenDialog(OutFileFrame);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					file = fc.getSelectedFile();
-					Pessoa.setNomeArquivoOut(file);
-				}else if(returnVal == JFileChooser.CANCEL_OPTION) {
-					JOptionPane.showMessageDialog(null, "Nao e possivel continuar sem escolher um arquivo de saída", "Fatal Error", JOptionPane.ERROR_MESSAGE);
-					System.exit(1);
-				}
+//				selectFile();
+				Pessoa.setNomeArquivoOut(new File("/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/out.txt"));
 				MainFrame MF = new MainFrame();
 				MF.setVisible(true);
+				setVisible(false);
 			}
 		});
 		GridBagConstraints gbc_btnTeste = new GridBagConstraints();
@@ -206,13 +196,32 @@ public class LoginFrame extends JFrame {
 		String correctUsr = "admin";
 		String correctPwd = "admin";
 		if(usr.equals(correctUsr) && pwd.equals(correctPwd)) {
-			statusLogin.setText("Conectado");
-			setVisible(false);
-			MainFrame IF = new MainFrame();
-			IF.setVisible(true);
+			selectFile();
+//			statusLogin.setText("Conectado");
+//			setVisible(false);
+//			MainFrame IF = new MainFrame();
+//			IF.setVisible(true);
 		}else {
 			JOptionPane.showMessageDialog(null, "Usuario ou senha incorretos\nDigite novamente", "Error Login", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	public void selectFile() {
+		setVisible(false);
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle("Escolha o arquivo de saida");
+//		File file1 = "/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/";
+		fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));
+		int returnVal = fc.showOpenDialog(OutFileFrame);
+		if(returnVal == JFileChooser.APPROVE_OPTION) {
+			file = fc.getSelectedFile();
+			Pessoa.setNomeArquivoOut(file);
+		}else if(returnVal == JFileChooser.CANCEL_OPTION) {
+			JOptionPane.showMessageDialog(null, "Nao e possivel continuar sem escolher um arquivo de saída", "Fatal Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+		MainFrame MF = new MainFrame();
+		MF.setVisible(true);
 	}
 	
 	public void about() {

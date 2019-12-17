@@ -237,13 +237,13 @@ public class ClienteFrame extends JFrame{
 		}
 		try {
 			comprar = comprar.replace(",", ".");								//Fazendo o tratamento para valores reais digitados com virgula
-			cliente.setNome(nome);
-			cliente.setIdade(Integer.parseInt(idade));
+			Cliente.setNome(nome);
+			Cliente.setIdade(Integer.parseInt(idade));
 			cliente.setAvaliacaoCliente(Integer.parseInt(avaliacao));
 			cliente.comprar(Float.parseFloat(comprar));
 			progressBar();
-			Pessoa.cadastro.add(cliente);
-			Pessoa.armazenaBuffer();
+			Cliente.cadastro.add(cliente);
+//			Cliente.armazenaBuffer();
 		} catch (Exception e) {
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
