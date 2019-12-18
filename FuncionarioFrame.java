@@ -214,10 +214,11 @@ public class FuncionarioFrame extends JFrame {
 	}
 	public void cadastrarFuncionario() throws Exception{
 		Funcionario func = new Funcionario();
-		String nome, idade, salario;
+		String nome, idade, salario, dados = "";
 		nome = nomeField.getText();
 		idade = idadeField.getText();
 		salario = salarioField.getText();
+		dados += nome + ";" + idade + ";" + salario;
 		if(nome.equals("") || idade.equals("") || salario.equals("")) {
 			lblStatusGravacao.setText("Ha dados vazios");
 			JOptionPane.showMessageDialog(null, "Há campos vazios\nVerifique!", "Cliente Error", JOptionPane.ERROR_MESSAGE);
@@ -229,6 +230,7 @@ public class FuncionarioFrame extends JFrame {
 			Funcionario.setIdade(Integer.parseInt(idade));
 			func.setValSalario(Float.parseFloat(salario));
 			progressBar();
+			func.setDados(dados);
 			Funcionario.cadastro.add(func);
 //			Funcionario.armazenaBuffer();
 		} catch (Exception e) {

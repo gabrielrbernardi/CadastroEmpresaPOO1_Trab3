@@ -202,10 +202,11 @@ public class FornecedorFrame extends JFrame {
 	
 	public void cadastrarFornecedor() throws Exception{		
 		Fornecedor forn = new Fornecedor();
-		String nome, idade, avaliacao;
+		String nome, idade, avaliacao, dados = "";
 		nome = nomeField.getText();
 		idade = idadeField.getText();
 		avaliacao = avaliacaoField.getText();
+		dados += nome + idade + avaliacao;
 		if(nome.equals("") || idade.equals("") || avaliacao.equals("")) {
 			lblStatusGravacao.setText("Ha dados vazios");
 			JOptionPane.showMessageDialog(null, "Há campos vazios\nVerifique!", "Cliente Error", JOptionPane.ERROR_MESSAGE);
@@ -216,6 +217,7 @@ public class FornecedorFrame extends JFrame {
 			Fornecedor.setIdade(Integer.parseInt(idade));
 			forn.setIndiceQualidade(Integer.parseInt(avaliacao));
 			progressBar();
+			forn.setDados(dados);
 			Fornecedor.cadastro.add(forn);
 //			Fornecedor.armazenaBuffer();
 		} catch (Exception e) {

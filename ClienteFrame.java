@@ -225,11 +225,12 @@ public class ClienteFrame extends JFrame{
 	
 	public void cadastrarCliente() throws Exception {
 		Cliente cliente = new Cliente();
-		String nome, idade, avaliacao, comprar;
+		String nome, idade, avaliacao, comprar, dados = "";
 		nome = nomeField.getText();
 		idade = idadeField.getText();
 		avaliacao = avaliacaoField.getText();
 		comprar = comprarField.getText();
+		dados += nome + ";" + idade + ";" + avaliacao + ";" + comprar;
 		if(nome.equals("") || idade.equals("") || avaliacao.equals("") || comprar.equals("")) {
 			lblStatusGravacao.setText("Ha dados vazios");
 			JOptionPane.showMessageDialog(null, "Há campos vazios\nVerifique!", "Cliente Error", JOptionPane.ERROR_MESSAGE);
@@ -242,6 +243,7 @@ public class ClienteFrame extends JFrame{
 			cliente.setAvaliacaoCliente(Integer.parseInt(avaliacao));
 			cliente.comprar(Float.parseFloat(comprar));
 			progressBar();
+			cliente.setDados(dados);
 			Cliente.cadastro.add(cliente);
 //			Cliente.armazenaBuffer();
 		} catch (Exception e) {

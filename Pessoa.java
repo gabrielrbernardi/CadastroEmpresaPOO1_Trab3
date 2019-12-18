@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import java.io.*;
 
 public abstract class Pessoa implements Interface {
 	private static String nome;
@@ -13,13 +12,18 @@ public abstract class Pessoa implements Interface {
 	private static PrintWriter out;
 	private static File nomeArquivoOut;
 	static ArrayList<Pessoa> cadastro = new ArrayList<Pessoa>();
-	String line;
-
+	private static String dados = "";
+	static String cadastros;
+	private static int qtdImpressao = 0;
+	
+	/* * * * * * * *
+	 * CONSTRUTOR  *
+	 * * * * * * * */
 	public Pessoa() throws Exception{
 //		System.out.println(f);
 		ID = ID+1;
 		File f = new File(nomeArquivoOut.toString());	//caminho para arquivo de saida
-		out = new PrintWriter(System.out);
+		out = new PrintWriter(f);
 //		if(ID > 1) {
 //			JOptionPane.showMessageDialog(null, "No momento, a quantidade de cadastros esta limitada a: 1\n" +  
 //												"Para mais informacoes, contate o adminstrador do sistema",
@@ -27,7 +31,9 @@ public abstract class Pessoa implements Interface {
 //			System.exit(2);
 //		}
 	}
-
+	/* * * * * * * * * * * * *
+	 * GETTERS AND SETTERS   *
+	 * * * * * * * * * * * * */
 	public static File getNomeArquivoOut() {
 		return nomeArquivoOut;
 	}
@@ -49,61 +55,49 @@ public abstract class Pessoa implements Interface {
 	public static int getID() {
 		return ID;
 	}
+	public static String getCadastros() {
+		return cadastros;
+	}
+	public static void setCadastros(String cadastros) {
+		Pessoa.cadastros = cadastros;
+	}
+	public static String getDados() {
+		return dados;
+	}
+	public void setDados(String dados) {
+		Pessoa.dados = Pessoa.getDados() + getID() + ";" + dados + "\n";
+	}
+	public static int getQtdImpressao() {
+		return qtdImpressao;
+	}
 	
+	/* * * * * * * * * * * * * * 
+	 * METODOS PERSONALIZADOS  *
+	 * * * * * * * * * * * * * */
 	public void aniversario() {
 		Pessoa.setIdade(Pessoa.getIdade() + 1);
 	}
 	
-//	public static void main(String args[]) throws Exception {		
-//		out = new PrintWriter(f);
-//	}
-	
-	
-	public static void armazenaBuffer() throws Exception{	
+	public static void armazenaBuffer() throws Exception{
+		int qtdTotalImpressao = 1;
 		try {
-			cadastro.forEach(val->{if (val instanceof Fornecedor) {
-				out.append("3" + ";" +
-						Fornecedor.getID() + ";" + 
-						Fornecedor.getNome() + ";" + 
-						Fornecedor.getIdade() + ";" + 
-						Fornecedor.getIndiceQualidade());
-			}else if(val instanceof Funcionario) {
-				out.append("2" + ";"+ 
-						Funcionario.getID() + ";" +
-						Funcionario.getNome() + ";" + 
-						Funcionario.getIdade() + ";" + 
-						Funcionario.getValSalario());
-			}else if(val instanceof Cliente) {
-				out.append("1" + ";" + 
-						Cliente.getID() + ";" + 
-						Cliente.getNome() + ";" + 
-						Cliente.getIdade() + ";" + 
-						Cliente.getAvaliacaoCliente() + ";" +
-						Cliente.getValorTotalGasto());
+			out.append(getDados());
+			qtdImpressao += 1;
+			if(getQtdImpressao() > qtdTotalImpressao) {
+				JOptionPane.showMessageDialog(null, "Quantidade de impressoes permitidas: " + qtdTotalImpressao, "Error", JOptionPane.ERROR_MESSAGE);
 			}
-			out.append("\n");
-			});
-			}catch (Exception e) {
-				throw new Exception("Erro na impressao do arquivo" + e);
-			}
+		}catch (Exception e) {
+			throw new Exception("\nErro na impressao do arquivo\n" + e);
+		}
 		out.close();
 	}
+	
 	public static void closeBuffer() {
 		try {
-			out.close();
-//			FileReader fr = new FileReader(getNomeArquivoOut());
-//			BufferedReader in = new BufferedReader(fr);
-//			String line = in.readLine();
-//			File f1 = new File("/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/out1.txt");
-//			PrintWriter pw = new PrintWriter(f1);
-//			line += "teste";
-//			pw.println(line);
-//			pw.close();
-			
+			out.close();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nErro no fechamento do arquivo", "Erro Escrita", JOptionPane.ERROR_MESSAGE);
-		}
-		
+		}	
 	}
 	
 }

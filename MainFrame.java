@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
 	private JRadioButton rdbtnFornecedor;
 	private JLabel lblStatusGravacao;
 	private File file;
+	private JMenuItem mntmImprimir;
 	/**
 	 * Create the frame.
 	 */
@@ -58,6 +59,20 @@ public class MainFrame extends JFrame {
 //				setVisible(false);
 //				OutFileFrame OFF = new OutFileFrame();
 //				OFF.setVisible(true);
+			}
+		});
+		
+		mntmImprimir = new JMenuItem("Imprimir");
+		mnFile.add(mntmImprimir);
+		mntmImprimir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Pessoa.armazenaBuffer();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e + "\n" + "Erro na impressao\n", "Error", JOptionPane.ERROR_MESSAGE);
+					lblStatusGravacao.setText("Deu errado");
+//					e.printStackTrace();
+				}
 			}
 		});
 		mnFile.add(mntmOutpuFile);
@@ -143,13 +158,15 @@ public class MainFrame extends JFrame {
 		contentPane.add(btnSubmit, gbc_btnSubmit);
 		
 		JButton btnImprimir = new JButton("Imprimir");
+		btnImprimir.setEnabled(false);
 		btnImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Pessoa.armazenaBuffer();
 				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e + "\n" + "Erro na impressao\n", "Error", JOptionPane.ERROR_MESSAGE);
 					lblStatusGravacao.setText("Deu errado");
-					e.printStackTrace();
+//					e.printStackTrace();
 				}
 			}
 		});
@@ -209,10 +226,9 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void help() {
-		JOptionPane.showMessageDialog(null, "Primeiramente faca o login na plataforma" + "\n" +
-											"Apos isso, selecione um arquivo para a saida/impressao dos dados" + "\n" +
-											"Depois selecione o tipo de cadastro que deseja fazer" + "\n" +
-											"Após isso, preencha os dados", 
+		JOptionPane.showMessageDialog(null, "Selecione o tipo de cadastro que deseja fazer" + "\n" +
+											"Após isso, preencha os dados" + "\n" +
+											"Quantidade de impressoes permitidas: 1", 
 											"Help", JOptionPane.QUESTION_MESSAGE);
 	}
 }

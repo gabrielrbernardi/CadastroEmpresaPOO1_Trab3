@@ -1,7 +1,7 @@
 package trab3POO;
 public class Funcionario extends Pessoa{
 	private static float valSalario;
-
+	
 	public Funcionario() throws Exception{
 	}
 	
