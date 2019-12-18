@@ -44,7 +44,7 @@ public class ClienteFrame extends JFrame{
 		mntmImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					Pessoa.closeBuffer();
+					Pessoa.armazenaBuffer();									//Funcao utulizada para imprimir os dados no arquivo
 				} catch (Exception e) {
 					lblStatusGravacao.setText("Deu errado");
 					e.printStackTrace();
@@ -94,6 +94,7 @@ public class ClienteFrame extends JFrame{
 		
 		nomeField = new JTextField();
 		enterTrigger(nomeField);
+		nomeField.requestFocus();
 		GridBagConstraints gbc_nomeField = new GridBagConstraints();
 		gbc_nomeField.anchor = GridBagConstraints.NORTH;
 		gbc_nomeField.fill = GridBagConstraints.HORIZONTAL;
@@ -222,7 +223,10 @@ public class ClienteFrame extends JFrame{
 			}
 		});
 	}
-	
+	/*
+	 * Funcao utilizada para salvar os dados inseridos, nos campos presentes no JFrame, nos artibutos presentes na classe Pessoa.
+	 * Feito isso, os dados serao validados e incrementados em uma string, que sera posteriormente impressa no arquivo de saida
+	 */
 	public void cadastrarCliente() throws Exception {
 		Cliente cliente = new Cliente();
 		String nome, idade, avaliacao, comprar, dados = "";
@@ -230,22 +234,22 @@ public class ClienteFrame extends JFrame{
 		idade = idadeField.getText();
 		avaliacao = avaliacaoField.getText();
 		comprar = comprarField.getText();
-		dados += nome + ";" + idade + ";" + avaliacao + ";" + comprar;
-		if(nome.equals("") || idade.equals("") || avaliacao.equals("") || comprar.equals("")) {
+		if(nome.equals("") || idade.equals("") || avaliacao.equals("") || comprar.equals("")) {		// Validacao dos dados
 			lblStatusGravacao.setText("Ha dados vazios");
 			JOptionPane.showMessageDialog(null, "Há campos vazios\nVerifique!", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		try {
-			comprar = comprar.replace(",", ".");								//Fazendo o tratamento para valores reais digitados com virgula
+			//Recebendo os dados de entrada do JFrame e armazenando nos atributos da classe
+			comprar = comprar.replace(",", ".");								// Fazendo o tratamento para valores reais digitados com virgula
 			Cliente.setNome(nome);
 			Cliente.setIdade(Integer.parseInt(idade));
 			cliente.setAvaliacaoCliente(Integer.parseInt(avaliacao));
 			cliente.comprar(Float.parseFloat(comprar));
-			progressBar();
+			dados += "1" + ";" + nome + ";" + idade + ";" + avaliacao + ";" + comprar;		// Acrescentando os valores digitados na string para posterior impressao no arquivo de saida
 			cliente.setDados(dados);
-			Cliente.cadastro.add(cliente);
-//			Cliente.armazenaBuffer();
+			progressBar();
+			Cliente.cadastro.add(cliente);										// Adicionando os dados do objeto no ArrayList
 		} catch (Exception e) {
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
@@ -255,19 +259,20 @@ public class ClienteFrame extends JFrame{
 	Timer timer;
 	private JMenu mnFile;
 	private JMenuItem mntmImprimir;
-	private void progressBar() {
+	private void progressBar() {												// Funcao usada para percorrer a ProgressBar presente no JFrame
 		ActionListener listener = new ActionListener() {
 			int value = 0;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				value++;
 				pBar.setValue(value);
+				//Enquanto a ProgressBar nao for percorrida completamente os seguintes campos serao desabiltados para que se evite conflito de dados
 				btnEnviar.setEnabled(false);
 				nomeField.setEditable(false);
 				idadeField.setEnabled(false);
 				avaliacaoField.setEnabled(false);
 				comprarField.setEnabled(false);
-				if(value >= 100) {
+				if(value >= 100) {												// Se o valor da ProgressBar for >= 100, os seguintes campos serao habilitados novamente para que seja possivel inserir novos dados no sistema
 					btnEnviar.setEnabled(true);
 					nomeField.setEditable(true);
 					idadeField.setEnabled(true);
@@ -279,13 +284,13 @@ public class ClienteFrame extends JFrame{
 				}
 			}
 		};
-		timer = new Timer(10, listener);
+		timer = new Timer(10, listener);										// Tempo definido para intervalo de incremento da variavel value
 		timer.start();
 	}
 	
 	public void about() {
 		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
-											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Termino do desenvolvimento: 18/12/2019" + "\n" +
 											"Versao: 1.0.1",
 											"About", JOptionPane.INFORMATION_MESSAGE);
 	}

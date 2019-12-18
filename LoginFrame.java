@@ -36,7 +36,7 @@ public class LoginFrame extends JFrame {
 	private JLabel statusLogin;
 	private JLabel lblUsuario;
 	private JLabel lblSenha;
-	private JButton btnTeste;
+	private JMenuItem mntmTeste;
 	private File file;
 
 
@@ -84,6 +84,24 @@ public class LoginFrame extends JFrame {
 		});
 		mnHelp.add(mntmHelp);
 		
+		mntmTeste = new JMenuItem("Login Teste");
+		mntmTeste.setEnabled(false);												// MenuItem de teste desabilitado por padrao, sera habilitado somente para testes
+		mntmTeste.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+//				selectFile();
+				Pessoa.setNomeArquivoOut(new File("/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/out.txt"));
+				MainFrame MF = new MainFrame();
+				MF.setVisible(true);
+				setVisible(false);
+			}
+		});
+		mnHelp.add(mntmTeste);
+//		GridBagConstraints gbc_mntmTeste = new GridBagConstraints();
+//		gbc_mntmTeste.insets = new Insets(0, 0, 5, 5);
+//		gbc_mntmTeste.gridx = 2;
+//		gbc_mntmTeste.gridy = 2;
+//		contentPane.add(mntmTeste, gbc_mntmTeste);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -106,6 +124,7 @@ public class LoginFrame extends JFrame {
 		
 		usernameField = new JTextField();
 		enterTrigger(usernameField);
+		usernameField.requestFocus();
 		GridBagConstraints gbc_usernameField = new GridBagConstraints();
 		gbc_usernameField.gridwidth = 3;
 		gbc_usernameField.fill = GridBagConstraints.HORIZONTAL;
@@ -148,22 +167,6 @@ public class LoginFrame extends JFrame {
 			}
 		});
 		
-		btnTeste = new JButton("teste");
-		btnTeste.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-//				selectFile();
-				Pessoa.setNomeArquivoOut(new File("/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/out.txt"));
-				MainFrame MF = new MainFrame();
-				MF.setVisible(true);
-				setVisible(false);
-			}
-		});
-		GridBagConstraints gbc_btnTeste = new GridBagConstraints();
-		gbc_btnTeste.insets = new Insets(0, 0, 5, 5);
-		gbc_btnTeste.gridx = 2;
-		gbc_btnTeste.gridy = 2;
-		contentPane.add(btnTeste, gbc_btnTeste);
-		
 		lblStatusLogin = new JLabel("Status Login:");
 		GridBagConstraints gbc_lblStatusLogin = new GridBagConstraints();
 		gbc_lblStatusLogin.insets = new Insets(0, 0, 5, 5);
@@ -193,30 +196,28 @@ public class LoginFrame extends JFrame {
 	public void login() {
 		String usr = usernameField.getText();
 		String pwd = new String(passwordField.getPassword());
-		String correctUsr = "admin";
-		String correctPwd = "admin";
+		String correctUsr = "admin";											// String usada para autenticacao de usuario no sistema
+		String correctPwd = "admin";											// String usada para autenticacao de senha no sistema
 		if(usr.equals(correctUsr) && pwd.equals(correctPwd)) {
 			selectFile();
 //			statusLogin.setText("Conectado");
 //			setVisible(false);
-//			MainFrame IF = new MainFrame();
-//			IF.setVisible(true);
 		}else {
 			JOptionPane.showMessageDialog(null, "Usuario ou senha incorretos\nDigite novamente", "Error Login", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
-	public void selectFile() {
+	public void selectFile() {													// Metodo usado para fazer a selecao do arquivo de saida de dados
 		setVisible(false);
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Escolha o arquivo de saida");
 //		File file1 = "/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/";
-		fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));
+		fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));		// Diretorio padrao para arquivo de saida
 		int returnVal = fc.showOpenDialog(OutFileFrame);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			file = fc.getSelectedFile();
 			Pessoa.setNomeArquivoOut(file);
-		}else if(returnVal == JFileChooser.CANCEL_OPTION) {
+		}else if(returnVal == JFileChooser.CANCEL_OPTION) {						// Se arquivo de saida nao for escolhido, nao sera possivel prosseguir com o sistema. E necessario que escolha um arquivo para a saida de dados
 			JOptionPane.showMessageDialog(null, "Nao e possivel continuar sem escolher um arquivo de saída", "Fatal Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
 		}
@@ -226,13 +227,14 @@ public class LoginFrame extends JFrame {
 	
 	public void about() {
 		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
-											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Termino do desenvolvimento: 18/12/2019" + "\n" +
 											"Versao: 1.0.1",
 											"About", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void help() {
 		JOptionPane.showMessageDialog(null, "Primeiramente faca o login na plataforma" + "\n" + 
+											"Usuario padrao: admin" + "\n" + "Senha padrao: admin" + "\n" +
 											"Apos isso, selecione um arquivo para a saida/impressao dos dados" + "\n" +
 											"Depois selecione o tipo de cadastro que deseja fazer" + "\n" +
 											"Após isso, preencha os dados", 

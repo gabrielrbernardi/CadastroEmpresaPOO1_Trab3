@@ -47,12 +47,12 @@ public class MainFrame extends JFrame {
 				JFileChooser fc = new JFileChooser();
 				fc.setDialogTitle("Escolha o arquivo de saida");
 //				File file1 = "/home/gabriel/UFU/3 periodo/POO/Trab3POO/src/";
-				fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));
-				int returnVal = fc.showOpenDialog(OutFileFrame);
+				fc.setCurrentDirectory(new File (System.getProperty("user.home") + "/UFU/3 periodo/POO/Trab3POO/src/"));		//Pasta default de saida para melhorar a UX, pode ser customizada
+				int returnVal = fc.showOpenDialog(OutFileFrame);				// Abrindo janela para selecao do arquivo de saida
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					file = fc.getSelectedFile();
 					Pessoa.setNomeArquivoOut(file);
-					JOptionPane.showMessageDialog(null, "O arquivo de saida foi alterado", "", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "O arquivo de saida foi alterado", "Informacao", JOptionPane.INFORMATION_MESSAGE);
 				}else if(returnVal == JFileChooser.CANCEL_OPTION) {
 					JOptionPane.showMessageDialog(null, "O arquivo de saida nao foi alterado", "Warning", JOptionPane.WARNING_MESSAGE);
 				}
@@ -62,13 +62,13 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
-		mntmImprimir = new JMenuItem("Imprimir");
+		mntmImprimir = new JMenuItem("Imprimir");								//Botao utilizado para imprimir dados no arquivo de saida
 		mnFile.add(mntmImprimir);
 		mntmImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Pessoa.armazenaBuffer();
-				} catch (Exception e) {
+				} catch (Exception e) {											// Exception para caso de erro na impressao do arquivo
 					JOptionPane.showMessageDialog(null, e + "\n" + "Erro na impressao\n", "Error", JOptionPane.ERROR_MESSAGE);
 					lblStatusGravacao.setText("Deu errado");
 //					e.printStackTrace();
@@ -82,13 +82,13 @@ public class MainFrame extends JFrame {
 		
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mntmAbout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {						// JMenuItem para seccao about
 				about();
 			}
 		});
 		mnHelp.add(mntmAbout);
 		
-		JMenuItem mntmHelp = new JMenuItem("Help");
+		JMenuItem mntmHelp = new JMenuItem("Help");								// JMenuItem para seccao about
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				help();
@@ -157,13 +157,13 @@ public class MainFrame extends JFrame {
 		gbc_btnSubmit.gridy = 2;
 		contentPane.add(btnSubmit, gbc_btnSubmit);
 		
-		JButton btnImprimir = new JButton("Imprimir");
+		JButton btnImprimir = new JButton("Imprimir");							// Botao sera habilitado somente para testes
 		btnImprimir.setEnabled(false);
 		btnImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Pessoa.armazenaBuffer();
-				} catch (Exception e) {
+				} catch (Exception e) {											// Exception para caso de erro na impressao do arquivo
 					JOptionPane.showMessageDialog(null, e + "\n" + "Erro na impressao\n", "Error", JOptionPane.ERROR_MESSAGE);
 					lblStatusGravacao.setText("Deu errado");
 //					e.printStackTrace();
@@ -195,16 +195,12 @@ public class MainFrame extends JFrame {
 		});
 	}
 	
-	public void submitForm() {
+	public void submitForm() {													// Conforme for selecionado o tipo de cadastro, o programa ira redirecionaro o usuario para o cadastramento correto
 		if(rdbtnCliente.isSelected()) {
-//			JOptionPane.showMessageDialog(null, "Foi selecionado: Cliente");
-			setVisible(false);
-//			LoginFrame LF = new LoginFrame();
-//			LF.setVisible(true);
+			setVisible(false);													// Janela atual eh 'destruida'
 			ClienteFrame CF = new ClienteFrame();
 			CF.setVisible(true);
 		}else if(rdbtnFuncionario.isSelected()) {
-//			JOptionPane.showMessageDialog(null, "Foi selecionado: Funcionario");
 			setVisible(false);
 			FuncionarioFrame FF = new FuncionarioFrame();
 			FF.setVisible(true);
@@ -212,15 +208,14 @@ public class MainFrame extends JFrame {
 			setVisible(false);
 			FornecedorFrame FF = new FornecedorFrame();
 			FF.setVisible(true);
-//			JOptionPane.showMessageDialog(null, "Foi selecionado: Fornecedor");
-		}else {
-			JOptionPane.showMessageDialog(null, "Selecione o tipo de cadastro!", "Main Error",JOptionPane.ERROR_MESSAGE);
+		}else {																	// Erro gerado para caso nao tenha sido selecionado nenhum tipo de cadastro
+			JOptionPane.showMessageDialog(null, "Selecione o tipo de cadastro!", "Main Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
 	public void about() {
 		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
-											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Termino do desenvolvimento: 18/12/2019" + "\n" +
 											"Versao: 1.0.1",
 											"About", JOptionPane.INFORMATION_MESSAGE);
 	}

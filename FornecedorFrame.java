@@ -44,7 +44,7 @@ public class FornecedorFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					Pessoa.closeBuffer();
+					Pessoa.armazenaBuffer();
 				} catch (Exception e1) {
 					lblStatusGravacao.setText("Deu errado");
 					e1.printStackTrace();
@@ -93,6 +93,7 @@ public class FornecedorFrame extends JFrame {
 		
 		nomeField = new JTextField();
 		enterTrigger(nomeField);
+		nomeField.requestFocus();
 		GridBagConstraints gbc_nomeField = new GridBagConstraints();
 		gbc_nomeField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_nomeField.insets = new Insets(0, 0, 5, 0);
@@ -199,49 +200,54 @@ public class FornecedorFrame extends JFrame {
 			}
 		});
 	}
-	
+	/*
+	 * Funcao utilizada para salvar os dados inseridos, nos campos presentes no JFrame, nos artibutos presentes na classe Pessoa.
+	 * Feito isso, os dados serao validados e incrementados em uma string, que sera posteriormente impressa no arquivo de saida
+	 */
 	public void cadastrarFornecedor() throws Exception{		
 		Fornecedor forn = new Fornecedor();
 		String nome, idade, avaliacao, dados = "";
 		nome = nomeField.getText();
 		idade = idadeField.getText();
 		avaliacao = avaliacaoField.getText();
-		dados += nome + idade + avaliacao;
 		if(nome.equals("") || idade.equals("") || avaliacao.equals("")) {
 			lblStatusGravacao.setText("Ha dados vazios");
 			JOptionPane.showMessageDialog(null, "Há campos vazios\nVerifique!", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		try {
+			//Recebendo os dados de entrada do JFrame e armazenando nos atributos da classe
 			Fornecedor.setNome(nome);
 			Fornecedor.setIdade(Integer.parseInt(idade));
 			forn.setIndiceQualidade(Integer.parseInt(avaliacao));
-			progressBar();
+			dados += "3" + ";" + nome + ";" + idade + ";" + avaliacao;			// Acrescentando os valores digitados na string para posterior impressao no arquivo de saida
 			forn.setDados(dados);
-			Fornecedor.cadastro.add(forn);
-//			Fornecedor.armazenaBuffer();
+			progressBar();
+			Fornecedor.cadastro.add(forn);										// Adicionando os dados do objeto no ArrayList
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 		}
 	}
 	Timer timer;
-	private void progressBar() {
+	private void progressBar() {												// Funcao usada para percorrer a ProgressBar presente no JFrame
 		ActionListener listener = new ActionListener() {
 			int value = 0;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				value++;
 				pBar.setValue(value);
+				//Enquanto a ProgressBar nao for percorrida completamente os seguintes campos serao desabiltados para que se evite conflito de dados
+				btnEnviar.setEnabled(false);
 				nomeField.setEditable(false);
 				idadeField.setEnabled(false);
 				avaliacaoField.setEnabled(false);
-				btnEnviar.setEnabled(false);
-				
-				if(value >= 100) {
+				avaliacaoField.setEnabled(false);
+				if(value >= 100) {												// Se o valor da ProgressBar for >= 100, os seguintes campos serao habilitados novamente para que seja possivel inserir novos dados no sistema
 					btnEnviar.setEnabled(true);
 					nomeField.setEditable(true);
 					idadeField.setEnabled(true);
+					avaliacaoField.setEnabled(true);
 					avaliacaoField.setEnabled(true);
 					lblStatusGravacao.setText("Dados gravados com sucesso");
 					timer.stop();
@@ -249,13 +255,13 @@ public class FornecedorFrame extends JFrame {
 				}
 			}
 		};
-		timer = new Timer(10, listener);
+		timer = new Timer(10, listener);										// Tempo definido para intervalo de incremento da variavel value
 		timer.start();
 	}
 	
 	public void about() {
 		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
-											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Termino do desenvolvimento: 18/12/2019" + "\n" +
 											"Versao: 1.0.1",
 											"About", JOptionPane.INFORMATION_MESSAGE);
 	}

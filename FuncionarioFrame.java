@@ -55,7 +55,7 @@ public class FuncionarioFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					Pessoa.closeBuffer();
+					Pessoa.armazenaBuffer();									// Funcao utilizada para que seja possivel imprimir os dados ja inseridos no arquivo de saida
 				} catch (Exception e1) {
 					lblStatusGravacao.setText("Deu errado");
 					e1.printStackTrace();
@@ -105,6 +105,7 @@ public class FuncionarioFrame extends JFrame {
 		
 		nomeField = new JTextField();
 		enterTrigger(nomeField);
+		nomeField.requestFocus();
 		GridBagConstraints gbc_nomeField = new GridBagConstraints();
 		gbc_nomeField.anchor = GridBagConstraints.NORTH;
 		gbc_nomeField.fill = GridBagConstraints.HORIZONTAL;
@@ -212,45 +213,50 @@ public class FuncionarioFrame extends JFrame {
 			}
 		});
 	}
+	/*
+	 * Funcao utilizada para salvar os dados inseridos, nos campos presentes no JFrame, nos artibutos presentes na classe Pessoa.
+	 * Feito isso, os dados serao validados e incrementados em uma string, que sera posteriormente impressa no arquivo de saida
+	 */
 	public void cadastrarFuncionario() throws Exception{
 		Funcionario func = new Funcionario();
 		String nome, idade, salario, dados = "";
 		nome = nomeField.getText();
 		idade = idadeField.getText();
 		salario = salarioField.getText();
-		dados += nome + ";" + idade + ";" + salario;
-		if(nome.equals("") || idade.equals("") || salario.equals("")) {
+		if(nome.equals("") || idade.equals("") || salario.equals("")) {			// Verificacao basica dos dados inseridos
 			lblStatusGravacao.setText("Ha dados vazios");
 			JOptionPane.showMessageDialog(null, "Há campos vazios\nVerifique!", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		try {
-			salario = salario.replace(",", ".");								//Fazendo o tratamento para valores de salario digitados com virgula, para que o programa consiga processar esses dados
+			//Recebendo os dados de entrada do JFrame e armazenando nos atributos da classe
+			salario = salario.replace(",", ".");								// Fazendo o tratamento para valores de salario digitados com virgula, para que o programa consiga processar esses dados
 			Funcionario.setNome(nome);
 			Funcionario.setIdade(Integer.parseInt(idade));
 			func.setValSalario(Float.parseFloat(salario));
-			progressBar();
+			dados += "2" + ";" + nome + ";" + idade + ";" + salario;			// Acrescentando os valores digitados na string para posterior impressao no arquivo de saida
 			func.setDados(dados);
-			Funcionario.cadastro.add(func);
-//			Funcionario.armazenaBuffer();
+			progressBar();
+			Funcionario.cadastro.add(func);										// Adicionando os dados do objeto no ArrayList
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e + "\nEntrada(s) invalida(s)\nDigite novamente", "Cliente Error", JOptionPane.ERROR_MESSAGE);
 			lblStatusGravacao.setText("Falha na gravacao dos dados");
 		}
 	}
 	Timer timer;
-	private void progressBar() {
+	private void progressBar() {												// Funcao usada para percorrer a ProgressBar presente no JFrame
 		ActionListener listener = new ActionListener() {
 			int value = 0;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				value++;
 				pBar.setValue(value);
+				//Enquanto a ProgressBar nao for percorrida completamente os seguintes campos serao desabiltados para que se evite conflito de dados
 				btnEnviar.setEnabled(false);
 				nomeField.setEditable(false);
 				idadeField.setEnabled(false);
 				salarioField.setEnabled(false);
-				if(value >= 100) {
+				if(value >= 100) {												// Se o valor da ProgressBar for >= 100, os seguintes campos serao habilitados novamente para que seja possivel inserir novos dados no sistema
 					btnEnviar.setEnabled(true);
 					nomeField.setEditable(true);
 					idadeField.setEnabled(true);
@@ -261,13 +267,13 @@ public class FuncionarioFrame extends JFrame {
 				}
 			}
 		};
-		timer = new Timer(10, listener);
+		timer = new Timer(10, listener);										// Tempo definido para intervalo de incremento da variavel value
 		timer.start();
 	}
 	
 	public void about() {
 		JOptionPane.showMessageDialog(null, "Comeco do desenvolvimento: 06/12/2019" + "\n" +
-											"Termino do desenvolvimento: 10/12/2019" + "\n" +
+											"Termino do desenvolvimento: 18/12/2019" + "\n" +
 											"Versao: 1.0.1",
 											"About", JOptionPane.INFORMATION_MESSAGE);
 	}
