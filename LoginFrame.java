@@ -1,3 +1,20 @@
+/*****************************************************************
+ * Nome do projeto: 			  Trab3POO                       *
+ * Nome, tipo de aquivo:		  LoginFrame, JFrame             *
+ * Autor(es): 					  Gabriel Ribeiro Bernardi,      *
+ * 								  Guilherme Soares Correa,       *
+ * 								  Antonio Pedro Rodrigues Santos *
+ * Matricula: 					  11821BCC036                    *
+ * 								  11821BCC026				     *
+ * 								  11821BCC021		    	     *
+ * Data de inicio: 				  06/12/2019				     *
+ * Data final de desenvolvimento: 18/12/2019      		         *
+ * Data da ultima modificacao: 	  18/12/2019				     *
+ * Dias de desenvolvimento:       13                             *
+ * Linguagem utilizada:			  Java						     *
+ * Plataforma Java utilizada:     Java SE Development Kit 13     *
+ ****************************************************************/
+
 package trab3POO;
 
 import java.awt.Component;
@@ -85,7 +102,7 @@ public class LoginFrame extends JFrame {
 		mnHelp.add(mntmHelp);
 		
 		mntmTeste = new JMenuItem("Login Teste");
-		mntmTeste.setEnabled(false);												// MenuItem de teste desabilitado por padrao, sera habilitado somente para testes
+		mntmTeste.setEnabled(true);												// MenuItem de teste desabilitado por padrao, sera habilitado somente para testes
 		mntmTeste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 //				selectFile();
